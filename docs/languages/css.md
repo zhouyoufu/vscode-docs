@@ -1,20 +1,19 @@
 ---
-Order: 11
+Order: 5
 Area: languages
 TOCTitle: CSS, Sass and Less
 ContentId: 039882CB-B5C4-46BD-A8D5-DB24A5E82706
 PageTitle: CSS, Sass and Less support in VS Code
-DateApproved: 8/4/2016
+DateApproved: 5/4/2017
 MetaDescription: Find out how Visual Studio Code can support your CSS, Sass and Less development.
 ---
-
 # CSS, Sass and Less
 
-Visual Studio Code has built-in support for editing style sheets in CSS `.css`, Sass `.scss` and Less `.less`.  In addition, you can install an extension for greater functionality. 
+Visual Studio Code has built-in support for editing style sheets in CSS `.css`, Sass `.scss` and Less `.less`.  In addition, you can install an extension for greater functionality.
 
-<div class="marketplace-extensions-css"></div>
+<div class="marketplace-extensions-css-curated"></div>
 
-> Tip: The extensions shown above are dynamically queried. Click on an extension tile above to read the description and reviews to decide which extension is best for you. See more in the [Marketplace](https://marketplace.visualstudio.com).
+> Tip: Click on an extension tile above to read the description and reviews to decide which extension is best for you. See more in the [Marketplace](https://marketplace.visualstudio.com).
 
 ## IntelliSense
 
@@ -28,28 +27,45 @@ Proposals contain extensive documentation, including a list of browsers that sup
 
 Press `kb(editor.emmet.action.expandAbbreviation)` to expand the current abbreviation.
 
->**Tip:** See the CSS section of the [Emmet cheat sheet](http://docs.emmet.io/cheat-sheet) for valid abbreviations.
+>**Tip:** See the CSS section of the [Emmet cheat sheet](https://docs.emmet.io/cheat-sheet) for valid abbreviations.
 
-We also support [User Defined Snippets](/docs/customization/userdefinedsnippets.md).
+If you'd like to use CSS Emmet abbreviations with other languages, you can associate an Emmet syntax profile (such as `css`, `html`) with other languages with the `emmet.syntaxProfiles` [setting](/docs/getstarted/settings.md). The setting takes a [language id](/docs/languages/overview.md#language-id) and associates it with an Emmet profile.
 
-## Syntax coloring & Color preview
+For example, to use Emmet CSS abbreviations inside JavaScript:
+
+```json
+{
+    "emmet.syntaxProfiles": {
+        "javascript": "css"
+     }
+}
+```
+
+We also support [User Defined Snippets](/docs/editor/userdefinedsnippets.md).
+
+## Syntax coloring & color preview
 
 As you type, we provide syntax highlighting as well as in context preview of colors.
 
 ![Syntax and color](images/css/color.png)
 
+>**Note:** You can hide VS Code's color previews by setting the corresponding `.colorDecorators.enable` [settings](/docs/getstarted/settings.md).
+>```json
+>    "css.colorDecorators.enable": false
+>```
+
 ## Syntax Verification & Linting
 
-We support CSS version <= 2.1, Sass version <= 3.2 and Less version <= 1.7.
+We support CSS version <= 2.1, Sass version <= 3.2 and Less version <= 2.3.
 
->**Note:** You can disable VS Code's default CSS, Sass or Less validation by setting the corresponding `.validate` User or Workspace [setting](/docs/customization/userandworkspace.md) to false.
+>**Note:** You can disable VS Code's default CSS, Sass or Less validation by setting the corresponding `.validate` User or Workspace [setting](/docs/getstarted/settings.md) to false.
 >```json
 >    "css.validate": false
 >```
 
-## Goto symbol in file
+## Go to Symbol in file
 
-Simply press `kb(workbench.action.gotoSymbol)`.
+Press `kb(workbench.action.gotoSymbol)`.
 
 ## Hovers
 
@@ -57,7 +73,7 @@ Hovering over a selector or property will provide an HTML snippet that is matche
 
 ![Hover in CSS](images/css/hover.png)
 
-## Goto Declaration and Find References
+## Go to Declaration and Find References
 
 This is supported for Sass and Less variables in the same file. [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables) per the [draft standards proposal](https://drafts.csswg.org/css-variables/) are also supported.
 
@@ -109,7 +125,7 @@ For the Less version of the above file, just change `$padding` to `@padding`.
 
 The next step is to set up the task configuration.  To do this open the **Command Palette** with `kb(workbench.action.showCommands)` and type in **Configure Task Runner**, press `kbstyle(Enter)` to select it. In the selection dialog that shows up, select `Others`.
 
-This will create a sample `tasks.json` file in the workspace `.vscode` folder.  The initial version of file has an example to run an arbitrary command. We will simply modify that configuration for transpiling Less/Sass instead:
+This will create a sample `tasks.json` file in the workspace `.vscode` folder.  The initial version of file has an example to run an arbitrary command. We will modify that configuration for transpiling Less/Sass instead:
 
 ```json
 // Sass configuration
@@ -135,7 +151,9 @@ VS Code interprets `node-sass` or `lessc` as an external task runner exposing ex
 
 ### Step 4: Run the Build Task
 
-As this is the only task in the file, you can execute it by simply pressing `kb(workbench.action.tasks.build)` (**Run Build Task**).  The sample Sass/Less file should not have any compile problems, so by running the task all that happens is a corresponding `styles.css` file is created.
+As this is the only command in the file, you can execute it by pressing `kb(workbench.action.tasks.build)` (**Run Build Task**).  The sample Sass/Less file should not have any compile problems, so by running the task all that happens is a corresponding `styles.css` file is created.
+
+>**Note:** If your build fails or you see an error message such as "An output directory must be specified when compiling a directory", be sure the filenames in your `tasks.json` match the filenames on disk. You can always test your build by running `node-sass styles.scss styles.css` from the command line.
 
 ## Automating Sass/Less compilation
 
@@ -145,13 +163,16 @@ Let's take things a little further and automate Sass/Less compilation with VS Co
 
 We will use [Gulp](http://gulpjs.com/) to create a task that will automate Sass/Less compilation.  We will also use the [gulp-sass](https://www.npmjs.com/package/gulp-sass) plug-in to make things a little easier.  The Less plug-in is [gulp-less](https://www.npmjs.com/package/gulp-less).
 
-We need to install `gulp` locally (no `-g` switch):
+We need to install gulp both globally (`-g` switch) and locally:
 
 ```
+npm install -g gulp
 npm install gulp gulp-sass gulp-less
 ```
 
 > **Note:** `gulp-sass` and `gulp-less` are Gulp plug-ins for the `node-sass` and `lessc` modules we were using before.  There are many other Gulp Sass and Less plug-ins you can use, as well as plug-ins for Grunt.
+
+You can test that your gulp installation was successful but typing `gulp -v`. You should see a version displayed for both the global (CLI) and local installations.
 
 ### Step 2: Create a simple Gulp task
 
@@ -204,7 +225,9 @@ What is happening here?
 
 ### Step 3: Modify the configuration in tasks.json for watching
 
-To complete the tasks integration with VS Code, we will need to modify the task configuration from before, to set a watch on the default Gulp task we just created.  Your tasks configuration should now look like this:
+To complete the tasks integration with VS Code, we will need to modify the task configuration from before to run the default Gulp task we just created. We will set `isBackground` to true so that the task is kept running in the background watching for file changes.
+
+Change your tasks configuration to look like this:
 
 ```json
 {
@@ -216,7 +239,7 @@ To complete the tasks integration with VS Code, we will need to modify the task 
             "taskName": "default",
             "isBuildCommand": true,
             "showOutput": "always",
-            "isWatching": true
+            "isBackground": true
         }
     ]
 }
@@ -224,17 +247,13 @@ To complete the tasks integration with VS Code, we will need to modify the task 
 
 ### Step 4: Run the Build Task
 
-Again, as this is the only task in the file you can execute it by simply pressing `kb(workbench.action.tasks.build)` (**Run Build Task**).  But this time, we've set a watch so the Status Bar should indicate that on the left-hand side.
+We marked this task as `isBuildCommand` so you can execute it by pressing `kb(workbench.action.tasks.build)` (**Run Build Task**).  But this time since we've set `isBackground` to true, the task keeps running. If you create and/or modify other Less/Sass files, you will see the respective CSS files generated and/or changes reflected on save.  You can also enable [Auto Save](/docs/editor/codebasics.md#saveauto-save) to make things even more streamlined.
 
-![Task watching spinner](images/css/taskwatching.png)
-
-At this point, if you create and/or modify other Less/Sass files, you will see the respective CSS files generated and/or changes reflected on save.  You can also enable [Auto Save](/docs/editor/codebasics.md#saveauto-save) to make things even more streamlined.
-
-If you want to stop the watch, you can press `kb(workbench.action.tasks.build)` again and click **Terminate Running Task** in the message box. Or you can use the **Command Palette** with `kb(workbench.action.showCommands)` and find the terminate command there.
+If you want to stop the task, you can use the **Tasks: Terminate Running Task** command in the  **Command Palette** (`kb(workbench.action.showCommands)`).
 
 ## Customizing CSS, Sass and Less Settings
 
-You can configure the following lint warnings as [User and Workspace Settings](/docs/customization/userandworkspace.md).
+You can configure the following lint warnings as [User and Workspace Settings](/docs/getstarted/settings.md).
 
 The `validate` setting allows you turn off the built-in validation. You would do this if you rather use a different linter.
 
@@ -244,10 +263,7 @@ css.validate | Enables or disables all css validations | true
 less.validate | Enables or disables all less validations | true
 scss.validate | Enables or disables all scss validations | true
 
-To configure an option for CSS, use `css.lint.` as the prefix to the id; for Sass and Less, use `less.lint.` and `scss.lint.`.
-
->**Note:** In VSCode 1.2 (May 2016) and earlier the Sass settings were prefixed with `sass`. If you have customized settings, rename the prefix from `sass` to `scss` to have
-them working again.
+To configure an option for CSS, use `css.lint.` as the prefix to the id; for Sass and Less, use `scss.lint.` and `less.lint.`.
 
 Set a setting to `warning` or `error` if you want to enable lint checking, use `ignore` to disable it. Lint checks are performed as you type.
 
@@ -278,14 +294,15 @@ idSelector | Warn when using selectors for an id `#id` as selectors should not c
 Read on to find out about:
 
 * [Configure Tasks](/docs/editor/tasks.md) - Dig into Tasks to help you transpile your Sass and Less to CSS.
-* [Editing Evolved](/docs/editor/editingevolved.md) - Find out about the rich set of features the editor offers for languages such as CSS.
+* [Basic Editing](/docs/editor/codebasics.md) - Learn about the powerful VS Code editor.
+* [Code Navigation](/docs/editor/editingevolved.md) - Move quickly through your source code.
 * [HTML](/docs/languages/html.md) - CSS is just the start, HTML is also very well supported in VS Code.
 
 ## Common Questions
 
-**Q: Do you provide a color selector?**
+**Q: Do you provide a color picker?**
 
-**A:** No, this is currently not supported.
+**A:** No, this is currently not supported. There are however several extensions in the Marketplace supporting color pickers.
 
 **Q: Do you support the indentation based Sass syntax (.sass) ?**
 

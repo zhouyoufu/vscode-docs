@@ -57,7 +57,7 @@ And at the same time, we open-sourced the VS Code [repository](https://github.co
 
 Today, Visual Studio Code delivers on many of the aspects that we imagined during incubation. VS Code has great editing and navigation [experiences](/docs/editor/editingevolved), streamlined [debugging](/docs/editor/debugging), and built-in [Git support](/docs/editor/versioncontrol).
 
-Developers today love VS Code for its powerful set of built-in features, intuitive editing and debugging experiences, performance and responsiveness, and great language and platform support. The VS Code download is under 40MB including support for 9 additional [languages](/docs/customization/locales) (Simplified Chinese, Traditional Chinese, French, German, Italian, Japanese, Korean, Russian and Spanish) and it installs in seconds.  With the help of developers like [@zersiax](https://twitter.com/zersiax), VS Code is now [accessible](/docs/editor/accessibility) to visually impaired developers on Windows and soon on OS X and Linux.
+Developers today love VS Code for its powerful set of built-in features, intuitive editing and debugging experiences, performance and responsiveness, and great language and platform support. The VS Code download is under 40MB including support for 9 additional [languages](/docs/getstarted/locales) (Simplified Chinese, Traditional Chinese, French, German, Italian, Japanese, Korean, Russian and Spanish) and it installs in seconds.  With the help of developers like [@zersiax](https://twitter.com/zersiax), VS Code is now [accessible](/docs/editor/accessibility) to visually impaired developers on Windows and soon on OS X and Linux.
 
 ## Community at its Core
 
@@ -73,7 +73,7 @@ Seeing the support and help the community has already poured into the product, t
 
 While we’re excited about releasing 1.0 today, we are even more excited about the future.
 
-Of course, we will continue to focus on the fundamentals.  Performance, stability, accessibility, and compatibility are of utmost importance to our users, and they are to us as well. We will continue to invest in improving developer productivity, guided by the great user feedback on [UserVoice](http://go.microsoft.com/fwlink/?LinkID=533482). We will continue to work with partners and the community to expand support for new languages, and platforms, and experiences. And we will continue to work with you, our community, to build a great tool for you, and for every developer.
+Of course, we will continue to focus on the fundamentals.  Performance, stability, accessibility, and compatibility are of utmost importance to our users, and they are to us as well. We will continue to invest in improving developer productivity, guided by the great user feedback on [UserVoice](https://go.microsoft.com/fwlink/?LinkID=533482). We will continue to work with partners and the community to expand support for new languages, and platforms, and experiences. And we will continue to work with you, our community, to build a great tool for you, and for every developer.
 
 If you haven’t tried out Visual Studio Code yet, please [download](/Download) it and let us know what you think!
 

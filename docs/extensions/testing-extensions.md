@@ -1,20 +1,19 @@
 ---
-Order: 10
+Order: 12
 Area: extensions
 TOCTitle: Testing Extensions
 ContentId: 2447F8EB-15F1-4279-B621-126C7B8EBF4B
 PageTitle: Testing Visual Studio Code Extensions
-DateApproved: 8/4/2016
+DateApproved: 5/4/2017
 MetaDescription: It is easy to write tests for your Visual Studio Code extension (plug-in).  The Yo Code extension generator scaffolds the necessary settings to run and debug your extension tests directly in Visual Studio Code.
 ---
-
 # Testing Your Extension
 
-VS Code supports running and debugging tests for your extension that require the VS Code API. These tests will run inside a special instance of VS Code, the `Extension Development Host`, and have access to the full APIs. We refer to these tests as integration tests, because they go beyond unit tests that can run in isolation from a VS Code window. This documentation focuses on VS Code integration tests. For unit testing, you can use any popular testing framework, like [Mocha](http://mochajs.org/) or [Jasmine](http://jasmine.github.io/).
+VS Code supports running and debugging tests for your extension that require the VS Code API. These tests will run inside a special instance of VS Code, the `Extension Development Host`, and have access to the full APIs. We refer to these tests as integration tests, because they go beyond unit tests that can run in isolation from a VS Code window. This documentation focuses on VS Code integration tests. For unit testing, you can use any popular testing framework, like [Mocha](https://mochajs.org/) or [Jasmine](https://jasmine.github.io/).
 
 ## Yo Code Test Scaffolding
 
-The basic [yo code generator](/docs/tools/yocode.md) extension project includes a sample test as well as the necessary infrastructure to run it.
+The basic [yo code generator](/docs/extensions/yocode.md) extension project includes a sample test as well as the necessary infrastructure to run it.
 
 **Note**: The documentation below assumes that you created a TypeScript extension but the same also applies for a JavaScript extension. However, some file names may be different.
 
@@ -26,7 +25,7 @@ With this configuration chosen, when you run `Debug: Start` (`kb(workbench.actio
 
 ![test output](images/testing-extensions/test-output.png)
 
-The generated test uses the [Mocha test framework](http://mochajs.org/) for its test runner and library.
+The generated test uses the [Mocha test framework](https://mochajs.org/) for its test runner and library.
 
 The extension project comes with a `test` folder that includes an `index.ts` file which defines the Mocha test runner configuration and an `extension.test.ts` which has the example `Something 1` test. You can typically leave `index.ts` untouched, but you can modify it to adjust the configuration of Mocha.
 
@@ -51,7 +50,7 @@ The `Launch Tests` configuration is defined in the project's `.vscode\launch.jso
     "args": ["--extensionDevelopmentPath=${workspaceRoot}", "--extensionTestsPath=${workspaceRoot}/out/test" ],
     "stopOnEntry": false,
     "sourceMaps": true,
-    "outDir": "${workspaceRoot}/out/test",
+    "outFiles": ["${workspaceRoot}/out/test/**/*.js"],
     "preLaunchTask": "npm"
 }
 ```
@@ -68,7 +67,7 @@ This way you can run your tests with predictable content and folder structure.
 
 ## Excluding test files from your extension package
 
-If you decide to share your extension, you may not want to include the tests in your extension package.  The [`.vscodeignore`](/docs/tools/vscecli.md#advance-usage) file lets you exclude test files when you package and publish your extension with the [`vsce` publishing tool](/docs/tools/vscecli.md).  By default, the `yo code` generated extension project excludes the `test` and `out/test` folders.
+If you decide to share your extension, you may not want to include the tests in your extension package.  The [`.vscodeignore`](/docs/extensions/publish-extension.md#advance-usage) file lets you exclude test files when you package and publish your extension with the [`vsce` publishing tool](/docs/extensions/publish-extension.md).  By default, the `yo code` generated extension project excludes the `test` and `out/test` folders.
 
 ```
 out/test/**
@@ -77,7 +76,7 @@ test/**
 
 ## Running tests automatically on Travis CI build machines
 
-You can run extension tests automatically on build machines like [Travis CI](http://travis-ci.org).
+You can run extension tests automatically on build machines like [Travis CI](https://travis-ci.org).
 
 In order to enable automated extension tests, the `vscode` npm module provides a test command that will:
 
@@ -115,10 +114,8 @@ script:
   - npm test --silent
 ```
 
-The script above will run the tests on both Linux and Mac OS X. Note that in order to run the tests on Linux, you need to have
+The script above will run the tests on both Linux and Mac. Note that in order to run the tests on Linux, you need to have
 a `before_install` configuration as above to enable Linux to start VS Code from the build.
-
-**Note:** Currently we do not support running tests on Windows (e.g. using Appveyor).
 
 There are some optional environment variables to configure the test runner:
 
@@ -129,14 +126,13 @@ There are some optional environment variables to configure the test runner:
 | `CODE_TESTS_PATH` | Location of the tests to execute |
 | `CODE_TESTS_WORKSPACE` | Location of a workspace to open for the test instance |
 
+## Running tests on Windows with AppVeyor
+
+You can also run extension tests on Windows with [AppVeyor](https://www.appveyor.com/). To get started, you can review the VS Code integration tests AppVeyor [configuration file](https://github.com/Microsoft/vscode/blob/master/appveyor.yml).
+
 ## Next Steps
 
 * [Debugging your Extension](/docs/extensions/debugging-extensions.md) - Learn more about how to run and debug your extension
-* [vsce](/docs/tools/vscecli.md) - Publish your extension with the VSCE command line tool.
+* [vsce](/docs/extensions/publish-extension.md) - Publish your extension with the VSCE command line tool.
 * [Extension Manifest file](/docs/extensionAPI/extension-manifest.md) - VS Code extension manifest file reference
 * [Extension API](/docs/extensionAPI/overview.md) - Learn about the VS Code extensibility APIs
-
-## Common Questions
-
-Nothing yet
-

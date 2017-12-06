@@ -1,26 +1,33 @@
 ---
-Order: 5
+Order: 8
 Area: editor
 TOCTitle: Version Control
 ContentId: 7E22CCC0-2AB8-4729-A4C9-BE2B16853820
-PageTitle: Version Control
-DateApproved: 8/4/2016
-MetaDescription: Visual Studio Code has integrated Git support for the most common commands.
+PageTitle: Version Control in VS Code
+DateApproved: 4/5/2017
+MetaDescription: Visual Studio Code source code support with integrated Git support.
 ---
+# Using Version Control in VS Code
 
-# Version Control
+Visual Studio Code has integrated source control and includes [Git](https://git-scm.com/) support in-the-box. Many other source control providers are available through [extensions](/docs/editor/extension-gallery.md) on the VS Code Marketplace.
 
-Visual Studio Code has integrated [Git](http://git-scm.com/) support for the most common commands. This makes it an excellent choice to manage your code commits while you develop.
+<div class="marketplace-extensions-scm-curated"></div>
 
->**Note:** VS Code will leverage your machine's Git installation, so you need to [install Git](http://git-scm.com/download) first before you get these features. Make sure you install at least version `2.0.0`.
+> **Tip:** Click on an extension tile to read the description and reviews in the Marketplace.
 
->**Tip:** VS Code will work with any Git repository.  If you don't already have a private hosted Git provider, [Visual Studio Team Services](https://www.visualstudio.com/products/visual-studio-team-services-vs) is a great free option. [Click here to sign-up](https://go.microsoft.com/fwlink/?LinkID=307137&campaign=o~msft~code~vc).
+## Git support
 
-## Overview
+VS Code ships with a Git source control manager (SCM) extension. Most of the source control UI and work flows are common across other SCM extensions so reading about the Git support will help you understand how to use another provider.
+
+>**Note:** If you are new to Git, the [git-scm](https://git-scm.com/documentation) website is a good place to start with a popular online [book](https://git-scm.com/book), Getting Started [videos](https://git-scm.com/video/what-is-git) and [cheat sheets](https://services.github.com/on-demand/downloads/github-git-cheat-sheet.pdf). The VS Code documentation assumes you are already familiar with Git.
 
 ![git overview](images/versioncontrol/overview.png)
 
-The Git icon on the left will always indicate an **overview of how many changes** you currently have in your repository. Clicking it will show you the details of your current repository changes: **unstaged**, **staged** and **unresolved conflicting merge** changes.
+>**Note:** VS Code will leverage your machine's Git installation, so you need to [install Git](https://git-scm.com/download) first before you get these features. Make sure you install at least version `2.0.0`.
+
+>**Tip:** VS Code will work with any Git repository.  If you don't already have a private hosted Git provider, [Visual Studio Team Services](https://www.visualstudio.com/products/visual-studio-team-services-vs) is a great free option. [Click here to sign-up](https://go.microsoft.com/fwlink/?LinkID=307137&campaign=o~msft~code~vc).
+
+The Source Control icon on the left will always indicate an **overview of how many changes** you currently have in your repository. Clicking it will show you the details of your current repository changes: **CHANGES**, **STAGED CHANGES** and **MERGE CHANGES**.
 
 Clicking each item will show you in detail **the textual changes within each file**. Note that for unstaged changes, the editor on the right still lets you edit the file: feel free to use it!
 
@@ -30,7 +37,7 @@ You can also find indicators of the **status of your repository** in the bottom 
 
 ## Git Status Bar Actions
 
-There is a **Synchronize** action in the Status Bar, next to the branch indicator, when the current checked out branch has an upstream branch configured.
+There is a **Synchronize changes** action in the Status Bar, next to the branch indicator, when the current checked out branch has an upstream branch configured.
 
 ![git status bar sync](images/versioncontrol/git-status-bar-sync.png)
 
@@ -48,23 +55,25 @@ We've found this to be a great workflow. For example, in the previous screenshot
 
 More specific **commit actions** can be found in the `...` menu on the top of the Git view.
 
+## Cloning a repository
+
+You can clone a Git repository with the **Git: Clone** command in the **Command Palette** (`kb(workbench.action.showCommands)`). You will be asked for the URL of the remote repository and the parent directory under which to put the local repository.
+
 ## Branches and Tags
 
-You can create and checkout branches directly within VS code through **Quick Open**. Press `kb(workbench.action.quickOpen)`, type `git` and then press `Space`. You should see the following:
+You can create and checkout branches directly within VS code through the **Git: Create Branch...** and **Git: Checkout to..** commands in the **Command Palette** (`kb(workbench.action.showCommands)`).
 
-![Git commands](images/versioncontrol/gitcommands.png)
-
-If you type `checkout` and press `kbstyle(Space)` again, you will see a dropdown containing all of the branches or tags in the current repository.
+If you run **Git: Checkout to...**, you will see a dropdown containing all of the branches or tags in the current repository.
 
 ![Git checkout](images/versioncontrol/gitbranches.png)
 
-The `git branch` command lets you quickly create a new branch.  Just provide the name of your new branch and VS Code will create the branch and switch to it.
+The **Git: Create Branch...** command lets you quickly create a new branch.  Just provide the name of your new branch and VS Code will create the branch and switch to it.
 
 ## Remotes
 
-Given that your repository is connected to some remote and that your checked out branch has an [upstream link](http://git-scm.com/book/ch3-5.html) to a branch in that remote, VS Code offers you useful actions to **push**, **pull** and **sync** that branch (the latter will run a **pull** command followed by a **push** command). You can find these actions in the `...` menu.
+Given that your repository is connected to some remote and that your checked out branch has an [upstream link](https://git-scm.com/book/ch3-5.html) to a branch in that remote, VS Code offers you useful actions to **push**, **pull** and **sync** that branch (the latter will run a **pull** command followed by a **push** command). You can find these actions in the `...` menu.
 
->**Tip:** You should [set up a credential helper](https://help.github.com/articles/caching-your-github-password-in-git/) to avoid getting asked for credentials every time VS Code talks to your Git remotes.  If you don't do this, you may want to consider disabling automatic fetching via the `git.autofetch` [setting](/docs/customization/userandworkspace.md) to reduce the number of prompts you get.
+>**Tip:** You should [set up a credential helper](https://help.github.com/articles/caching-your-github-password-in-git/) to avoid getting asked for credentials every time VS Code talks to your Git remotes.  If you don't do this, you may want to consider disabling automatic fetching via the `git.autofetch` [setting](/docs/getstarted/settings.md) to reduce the number of prompts you get.
 
 ## Gutter indicators
 
@@ -92,21 +101,21 @@ Our Git tooling supports viewing of diffs within VS Code.
 
 ## Git Output Window
 
-You can always peek under the hood to see the Git commands we are using.  This is helpful if something strange is happening or if you simply get curious. :)
+You can always peek under the hood to see the Git commands we are using.  This is helpful if something strange is happening or if you are just curious. :)
 
-To open the Git output window, run **View** > **Toggle Output** and select `Git` from the dropdown.
+To open the Git output window, run **View** > **Output** and select **Git** from the dropdown.
 
 ## Initialize a Repository
 
-If your workspace isn't under Git source control, you can easily create a Git repository with the **Initialise git repository** command.  When VS Code doesn't detect an existing Git repository, you will see a **This workspace isn't yet under git source control.** message in the Git View and the **Initialize git repository** command will be available.
+If your workspace isn't under Git source control, you can easily create a Git repository with the **Initialize Git Repository** command.  When VS Code doesn't detect an existing Git repository, you will see a **This workspace isn't yet under git source control.** message in the Git View and the **Initialize Git Repository** command will be available.
 
 ![Git initialize repository](images/versioncontrol/git-initialize.png)
 
-Running **Initialize git repository** will create the necessary Git repository metadata files and show your workspace files as unstaged changes.
+Running **Initialize Git Repository** will create the necessary Git repository metadata files and show your workspace files as unstaged changes.
 
 ## Git patch/diff mode
 
-When you run VS Code from the command line, you can pass the `--wait` argument to make the command wait until you have closed the current VS Code instance. This can be used to configure VS Code as your Git external editor.
+When you launch VS Code from the command line, you can pass the `--wait` argument to make the launch command wait until you have closed the new VS Code instance. This can be useful when you configure VS Code as your Git external editor.
 
 Here are the steps to do so:
 
@@ -141,17 +150,18 @@ To summarize, here are some examples of where you can use VS Code as the editor:
 
 ## Next Steps
 
-* [Intro Video - Git Version Control](/docs/introvideos/versioncontrol)
-* [Editing Evolved](/docs/editor/editingevolved.md) - Lint, IntelliSense, Lightbulbs, Peek and Goto Definition and more
+* [Intro Video - Git Version Control](/docs/introvideos/versioncontrol.md) - An introductory video providing an overview of VS Code Git support.
+* [Basic Editing](/docs/editor/codebasics.md) - Learn about the powerful VS Code editor.
+* [Code Navigation](/docs/editor/editingevolved.md) - Move quickly through your source code.
 * [Debugging](/docs/editor/debugging.md) - This is where VS Code really shines
 * [Tasks](/docs/editor/tasks.md) - Running tasks with Gulp, Grunt and Jake.  Showing Errors and Warnings
-* [Customization](/docs/customization/overview.md) - Themes, settings and keyboard bindings
+* [SCM API](/docs/extensionAPI/api-scm.md) - If you want to integrate another Source Control provider into VS Code, see our SCM API.
 
 ## Common Questions
 
 **Q: Hey, I initialized my repo but the actions in the `...` menu are all grayed out. What gives?**
 
-**A:** To **push, pull and sync** you need to have a Git origin set up.  You can get the required URL from the repo host.  Once you have that URL, you simply need to add it to the Git settings by running a couple of command line actions. For example, for Visual Studio Team Services:
+**A:** To **push, pull and sync** you need to have a Git origin set up.  You can get the required URL from the repo host.  Once you have that URL, you need to add it to the Git settings by running a couple of command line actions. For example, for Visual Studio Team Services:
 
 ```
 > git remote add origin https://<AccountName>.visualstudio.com/DefaultCollection/_git/<RepoName>
@@ -160,10 +170,7 @@ To summarize, here are some examples of where you can use VS Code as the editor:
 
 **Q: My team is using Team Foundation version control (TFVC) instead of Git. What should I do?**
 
-**A:** Use the Team Foundation command line tools.
-
-* For cross-platform use: [Cross-Platform Command-Line Client Beginner's Guide](https://msdn.microsoft.com/en-us/library/hh873092.aspx)
-* For Windows: [Use Team Foundation version control commands](https://msdn.microsoft.com/en-us/library/vstudio/cc31bk2e.aspx)
+**A:** Use the [Visual Studio Team Services Extension](https://marketplace.visualstudio.com/items?itemName=ms-vsts.team) and this will light up TFVC support.
 
 **Q: Why do the Pull, Push and Sync actions never finish?**
 
@@ -173,7 +180,7 @@ You can always set up a [credential helper](https://help.github.com/articles/cac
 
 **Q: How can I sign into Git with my Team Services account which requires multi-factor authentication?**
 
-**A:** There are now [Git credential helpers](http://blogs.msdn.com/b/visualstudioalm/archive/2015/11/18/visual-studio-team-services-git-credential-manager-for-mac-and-linux.aspx) that assist with multi-factor authentication. You can download these from [Git Credential Manager for Mac and Linux](https://github.com/Microsoft/Git-Credential-Manager-for-Mac-and-Linux) and [Git Credential Manager for Windows](https://github.com/Microsoft/Git-Credential-Manager-for-Windows).
+**A:** There are now [Git credential helpers](https://blogs.msdn.com/b/visualstudioalm/archive/2015/11/18/visual-studio-team-services-git-credential-manager-for-mac-and-linux.aspx) that assist with multi-factor authentication. You can download these from [Git Credential Manager for Mac and Linux](https://github.com/Microsoft/Git-Credential-Manager-for-Mac-and-Linux) and [Git Credential Manager for Windows](https://github.com/Microsoft/Git-Credential-Manager-for-Windows).
 
 **Q: Using Visual Studio Code, I accidentally initialized a Git repo on a folder with a massive number of files, like my entire hard drive. Now VS Code is too slow to use or hangs. What do I do?**
 
@@ -189,13 +196,13 @@ Next, assuming you want to remove the unintended repo initialization, look for t
 
 **Q: I have GitHub Desktop installed on my computer but VS Code ignores it.**
 
-**A:** VS Code expects `git.exe` to be on the operating system's `PATH` (`$PATH` on OS X or Linux).  **GitHub Desktop** installs isolated git binaries and does not automatically add `git.exe` to `PATH`.
+**A:** VS Code expects `git.exe` to be on the operating system's `PATH` (`$PATH` on Mac or Linux).  **GitHub Desktop** installs isolated git binaries and does not automatically add `git.exe` to `PATH`.
 
 You can either:
 
 * Add the location of `git.exe` to `PATH` and restart VS Code.
-* Set the `git.path` [setting](/docs/customization/userandworkspace.md) to the location of `git.exe`.
+* Set the `git.path` [setting](/docs/getstarted/settings.md) to the location of `git.exe`.
 
 On a **GitHub Desktop** Windows installation, `git.exe` is usually under `C:\Users\USERNAME\AppData\Local\GitHub\PortableGit_COMMITID\ming32\bin`.  Searching for `git.exe` under AppData\Local\GitHub should find the binary.
 
-You can also install Git from [git-scm](http://git-scm.com/) and this will not interfere with **GitHub Desktop**.
+You can also install Git from [git-scm](https://git-scm.com/) and this will not interfere with **GitHub Desktop**.

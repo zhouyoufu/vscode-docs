@@ -1,10 +1,10 @@
 ---
-Order: 8
+Order: 9
 Area: extensions
 TOCTitle: Running and Debugging Extensions
 ContentId: 44569A0C-7196-48E6-A5EE-FC5AAAAD32F3
 PageTitle: Running and Debugging your Visual Studio Code Extension
-DateApproved: 8/4/2016
+DateApproved: 5/4/2017
 MetaDescription: It is easy to debug and test your Visual Studio Code extension (plug-in).  The Yo Code extension generator scaffolds the necessary settings to run and debug your extension directly in Visual Studio Code.
 ---
 
@@ -20,7 +20,7 @@ You can use VS Code to develop an extension for VS Code and VS Code provides sev
 
 ## Creating an Extension
 
-We suggest you start your extension by scaffolding out the basic files. You can use the `yo code` Yeoman generator to do this and we cover the details in the [Yo Code document](/docs/tools/yocode.md).  The generator will ensure everything is set up so you have a great development experience.
+We suggest you start your extension by scaffolding out the basic files. You can use the `yo code` Yeoman generator to do this and we cover the details in the [extension generator](/docs/extensions/yocode.md) topic.  The generator will ensure everything is set up so you have a great development experience.
 
 ## Running and Debugging your Extension
 
@@ -36,7 +36,6 @@ The TypeScript compilation is setup as follows in the generated extension:
 
 * A `tsconfig.json` defines the compile options for the TypeScript compiler. Read more about it at the [TypeScript wiki](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html) or in our [TypeScript Language Section](/docs/languages/typescript.md#tsconfigjson).
 * A TypeScript compiler with the proper version is included inside the node_modules folder.
-* A `typings/vscode-typings.d.ts`: instructs the TypeScript compiler to include the `vscode` API definition.
 * The API definition is included in `node_modules/vscode`.
 
 The TypeScript compilation is triggered before running your extension. This is done with the `preLaunchTask` attribute defined in the
@@ -49,7 +48,7 @@ The TypeScript compilation is triggered before running your extension. This is d
 Your extension is launched in a new window with the title `Extension Development Host`. This window runs VS Code or more
 precisely the `Extension Host` with your extension under development.
 
-You can accomplish the same from the command line using the `extensionDevelopmentPath` option. This options tells VS Code in what
+You can accomplish the same from the command line using the `extensionDevelopmentPath` option. This option tells VS Code in what
 other locations it should look for extensions, e.g.,
 
 >`code --extensionDevelopmentPath=_my_extension_folder`.
@@ -60,7 +59,7 @@ This is what happens when pressing `F5`:
 
  1. `.vscode/launch.json` instructs to first run a task named `npm`.
  2. `.vscode/tasks.json` defines the task `npm` as a shell command to `npm run compile`.
- 3. `package.json` defines the script `compile` as `node ./node_modules/vscode/bin/compile -watch -p ./`
+ 3. `package.json` defines the script `compile` as `tsc -watch -p ./`
  4. This eventually invokes the TypeScript compiler included in node_modules, which generates `out/src/extension.js` and `out/src/extension.js.map`.
  5. Once the TypeScript compilation task is finished, the `code --extensionDevelopmentPath=${workspaceRoot}` process is spawned.
  6. The second instance of VS Code is launched in a special mode and it searches for an extension at `${workspaceRoot}`.
@@ -78,7 +77,7 @@ your changes. You have two options to do this:
 ## Next Steps
 
 * [Testing your Extension](/docs/extensions/testing-extensions.md) - Learn how to write unit and integration tests for your extension
-* [Publishing Tool](/docs/tools/vscecli.md) - Publish your extension with the vsce command line tool.
+* [Publishing Tool](/docs/extensions/publish-extension.md) - Publish your extension with the vsce command line tool.
 * [Extension Manifest file](/docs/extensionAPI/extension-manifest.md) - VS Code extension manifest file reference
 * [Extension API](/docs/extensionAPI/overview.md) - Learn about the VS Code extensibility APIs
 
@@ -87,7 +86,7 @@ your changes. You have two options to do this:
 **Q: How can I use API from my extension that was introduced in a newer release of VS Code?**
 
 **A:** If your extension is using an API that was introduced in a newer release of VS Code, you have to declare this dependency in the
-`engines` field of the `package.json` file of the extension. 
+`engines` field of the `package.json` file of the extension.
 
 Here are the steps:
 

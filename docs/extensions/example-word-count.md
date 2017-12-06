@@ -1,10 +1,10 @@
 ---
-Order: 3
+Order: 4
 Area: extensions
 TOCTitle: Example-Word Count
 ContentId: 4D9132DC-CDDB-4E07-B2DD-9A7E168BE384
 PageTitle: Visual Studio Code Example - Word Count Extension
-DateApproved: 8/4/2016
+DateApproved: 5/4/2017
 MetaDescription: The Word Count extension (plug-in) example takes you deeper into the Visual Studio Code extensibility model, showing how to interact with the editor and manage extension and VS Code resources.
 ---
 
@@ -36,7 +36,7 @@ npm install -g yo generator-code
 yo code
 ```
 
-This will open up the extension generator - we will base this example on the TypeScript `New Extension` option. For now, simply fill in the fields the same way you see them completed in the image below (using 'WordCount' as the extension name and your own name as the publisher).
+This will open up the extension generator - we will base this example on the TypeScript `New Extension` option. For now, fill in the fields the same way you see them completed in the image below (using 'WordCount' as the extension name and your own name as the publisher).
 
 ![Yo Code Word Count Example Output](images/example-word-count/yo1.png)
 
@@ -100,9 +100,9 @@ class WordCounter {
             return;
         }
 
-         let doc = editor.document;
+        let doc = editor.document;
 
-        // Only update status if an MarkDown file
+        // Only update status if an Markdown file
         if (doc.languageId === "markdown") {
             let wordCount = this._getWordCount(doc);
 
@@ -137,7 +137,7 @@ class WordCounter {
 
 Now let's try our updates to the extension.
 
-We have the compilation of the TypeScript file set on a watch (in the extension's .vscode\tasks.json file) so there is no need to re-build.  Simply hit `kbstyle(Ctrl+R)` in the **[Extension Development Host]** window where your code is running and the extension will reload (you can also just `kb(workbench.action.debug.start)` from your primary development window).  We still need to activate the code in the same way as before with the "Hello World" command.  Assuming you are in a Markdown file, your Status Bar will display the word count.
+We have the compilation of the TypeScript file set on a watch (in the extension's .vscode\tasks.json file) so there is no need to re-build.  Hit `kbstyle(Ctrl+R)` in the **[Extension Development Host]** window where your code is running and the extension will reload (you can also just `kb(workbench.action.debug.start)` from your primary development window).  We still need to activate the code in the same way as before with the "Hello World" command.  Assuming you are in a Markdown file, your Status Bar will display the word count.
 
 ![Working Word Count](images/example-word-count/wordcount2.png)
 
@@ -235,7 +235,7 @@ If you set a breakpoint on the `activate` function, you'll notice that it is onl
 
 ## Customizing the Status Bar
 
-We've seen how you can display formatted text on the Status Bar.  VS Code allows you to customize your Status Bar additions even further with color, icons, tooltips and more.  Using IntelliSense, you can see the various `StatusBarItem` fields.  Another great resource for learning about the VS Code extensibility APIs is the `vscode.d.ts` typings file included in your generated Extension project.  Open `node_modules\vscode\vscode.d.ts` in the editor, you'll see the complete VS Code extensibility API with comments.
+We've seen how you can display formatted text on the Status Bar.  VS Code allows you to customize your Status Bar additions even further with color, icons, tooltips and more.  Using IntelliSense, you can see the various `StatusBarItem` fields.  Another great resource for learning about the VS Code extensibility APIs is the `vscode.d.ts` type declaration file included in your generated Extension project.  Open `node_modules\vscode\vscode.d.ts` in the editor, you'll see the complete VS Code extensibility API with comments.
 
 ![vscode-d-ts file](images/example-word-count/vscode-d-ts.png)
 
@@ -253,7 +253,7 @@ to display a [GitHub Octicon](https://octicons.github.com) `pencil` icon to the 
 
 ## Disposing Extension Resources
 
-Now we'll take a deeper look at how extensions should handle VS Code resources through [Disposables](/docs/extensions/patterns-and-principles.md#disposables).
+Now we'll take a deeper look at how extensions should handle VS Code resources through [Disposables](/docs/extensionAPI/patterns-and-principles.md#disposables).
 
 When an extension is activated, it is passed an `ExtensionContext` object which has a `subscriptions` collection of Disposables. Extensions can add their Disposable objects to this collection and VS Code will dispose of those objects when the extension is deactivated.
 
@@ -273,24 +273,18 @@ Events are another example where `onDid*` event subscriber methods return a Disp
 
 ## Installing your Extension Locally
 
-So far, the extension you have written only runs in a special instance of VS Code, the Extension Development Host instance. To make your extension available to all VS Code instances, copy the extension folder contents to a new folder under [your `.vscode/extensions` folder](/docs/extensions/install-extension.md#your-extensions-folder).
+So far, the extension you have written only runs in a special instance of VS Code, the Extension Development Host instance. To make your extension available to all VS Code instances, copy the extension folder contents to a new folder under [your `.vscode/extensions` folder](/docs/extensions/yocode.md#your-extensions-folder).
 
 ## Publishing your Extension
 
-Read about how to [Share an Extension](/docs/tools/vscecli.md).
+Read about how to [Share an Extension](/docs/extensions/publish-extension.md).
 
 ## Next Steps
 
 Read on to find out about:
 
-* [Yo Code](/docs/tools/yocode.md) - learn about other options in Yo Code
-* [Extension API](/docs/extensionAPI/overview.md) - Get an overview of the Extension API
-* [Customization](/docs/customization/overview.md) - Themes, settings and keyboard bindings
-* [Publishing Tool](/docs/tools/vscecli.md) - Learn how to publish an extension to the public Marketplace
-* [Editor API](/docs/extensionAPI/vscode-api.md#window) - Learn more about Text Documents, Text Editors and editing text
-
-## Common Questions
-
-Nothing yet
-
-
+* [Extension Generator](/docs/extensions/yocode.md) - Learn about other options in the Yo Code extension generator.
+* [Extension API](/docs/extensionAPI/overview.md) - Get an overview of the Extension API.
+* [Publishing Tool](/docs/extensions/publish-extension.md) - Learn how to publish an extension to the public Marketplace.
+* [Editor API](/docs/extensionAPI/vscode-api.md#window) - Learn more about Text Documents, Text Editors and editing text.
+* [Additional Extension Examples](/docs/extensions/samples.md) - Take a look at our list of example extension projects.

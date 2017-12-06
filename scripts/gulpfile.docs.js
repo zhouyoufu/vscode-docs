@@ -24,22 +24,22 @@ function Area(title, path, include, articles) {
 
 var areas = {
 	// Note that each attribute must be lower case
-	introvideos: new Area('Intro Videos', 'introvideos', true),
+	introvideos: new Area('Intro Videos', 'introvideos', false),
 	setup: new Area('Setup', 'setup', true),
-	editor: new Area('Editor', 'editor', true),
-	customization: new Area('Customization', 'customization', true),
+	getstarted: new Area('Get Started', 'getstarted', true),
+	editor: new Area('User Guide', 'editor', true),
 	languages: new Area('Languages', 'languages', true),
-	runtimes: new Area('Runtimes', 'runtimes', true),
-	extensions: new Area('Extensions', 'extensions', true),
+	nodejs: new Area('Node.js / JavaScript', 'nodejs', true),
+	extensions: new Area('Extension Authoring', 'extensions', true),
 	extensionapi: new Area('Extensibility Reference', 'extensionAPI', true),
-	tools: new Area('Tools', 'tools', true),
-	supporting: new Area('Supporting', 'supporting', false)
+	supporting: new Area('Supporting', 'supporting', false),
+	other: new Area('Other', 'other', true)
 };
 
 gulp.task('copy-images', function () {
 	console.log('Copying over rest of static content files...');
 
-	var images = gulp.src([DOCS_SRC_ROOT + '/**/images/**/*.{png,PNG,jpg,JPG}'])
+	var images = gulp.src([DOCS_SRC_ROOT + '/**/images/**/*.{png,PNG,jpg,JPG,svg,SVG}'])
 					.pipe(imagemin());
 
 	var gifs = gulp.src([DOCS_SRC_ROOT + '/**/images/**/*.{gif,GIF}']);

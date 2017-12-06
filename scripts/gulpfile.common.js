@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
  
 var markdownIt = require('markdown-it');
+var externalLinks = require('markdown-it-external-links');
 var highlightjs = require('highlight.js');
 var swig = require('swig');
 var slash = require('gulp-slash');
@@ -57,25 +58,47 @@ exports.mapFileToArticle = function(file) {
 		MetaTags: !file.data.MetaTags ? [] : (file.data.MetaTags).join(','),
 		Sections: [],
 		Order: file.data.Order,
-		Content: ""
+		Content: "",
+		MetaSocialImage: file.data.MetaSocialImage
 	};
 	return article;
 }
 
+exports.getLatestContent = function(base, link, title, description) {
+	return new Buffer('' +
+		'<!DOCTYPE html>' +
+		'<html>' +
+			'<head>' + 
+				'<title>' + title + '</title>' + 
+				'<meta http-equiv="refresh" content="0; url=/' + base + '/' + link + '">' + 
+				'<meta name="description" content="' + description + '">' +
+				'<meta name="robots" content="noindex">' + 
+				'<link rel="canonical" href="/' + base + '/' + link + '" />' +
+			'</head>' +
+		'</html>'
+	, 'utf8');
+}
+
 exports.compileMarkdown = function(file, article) {
 	var md = markdownIt({ html: true, langPrefix: '' });
+	md.use(externalLinks, {
+		externalTarget: "_blank",
+		internalDomains: ["code.visualstudio.com", "vscode-update.azurewebsites.net"]
+	});
 
 	// Apply custom markdown rules
 	md.renderer.rules.heading_open = function (tokens, idx, options, env, self) {
 		var headerToken = tokens[idx];
 		var title = tokens[idx + 1];
-		if (headerToken.tag === 'h2') {
+		if ((headerToken.tag === 'h2') || (headerToken.tag === 'h3')) {
 			var anchor = "_" + exports.filterText(title.content).toLowerCase();
 			var section = {
 				Title: title.content,
 				Anchor: anchor
 			};
-			article.Sections.push(section);
+			if (headerToken.tag === 'h2') {
+				article.Sections.push(section);
+			}
 			headerToken.attrPush(['id', anchor]);
             headerToken.attrPush(['data-needslink', anchor]);
 			tokens[idx] = headerToken;
@@ -111,6 +134,12 @@ exports.compileMarkdown = function(file, article) {
 	
 	// need to remove embedded .md before # section tags and place _ underscore after for cshtml navigation
 	fileContents = fileContents.replace(/.md#/g, "#_"); 
+
+	// place underscore after a single # section tags for cshtml navigation
+	fileContents = fileContents.replace(/\(#/g, "(#_"); 
+
+	// remove the markdown stylesheet and scroll-to-top button that we intend only for the release notes that show in the product
+	fileContents = fileContents.replace('<a id="scroll-to-top" role="button" aria-label="scroll to top" href="#"><span class="icon"><\/span><\/a>\n<link rel="stylesheet" type="text\/css" href="css\/inproduct_releasenotes.css"\/>', ""); 
 
 	// Render markdown
 	article.Content = md.render(fileContents);

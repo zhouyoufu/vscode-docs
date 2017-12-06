@@ -1,35 +1,37 @@
 ---
-Order: 3
+Order: 13
 Area: languages
 TOCTitle: C#
 ContentId: 40C8AAC1-C00D-4E91-8877-737A598346B6
 PageTitle: C# programming with Visual Studio Code
 DateApproved: 5/9/2016
 MetaDescription: Find out how to get the best out of Visual Studio Code and C#.
+MetaSocialImage: csharp_languages_csharp.png
 ---
-
 # Working with C&#35;
 
-The C# support in VS Code is optimized for cross-platform .NET Core development (see [working with .NET Core and VS Code](/docs/runtimes/dotnet.md) for another relevant article).  Our focus with VS Code is to be a great editor for cross-platform C# development.  For instance, many Unity game developers enjoy using VS Code in place of the MonoDevelop IDE.
+The C# support in VS Code is optimized for cross-platform .NET Core development (see [working with .NET Core and VS Code](/docs/other/dotnet.md) for another relevant article).  Our focus with VS Code is to be a great editor for cross-platform C# development.  For instance, many [Unity](/docs/other/unity.md) game developers enjoy using VS Code in place of the MonoDevelop IDE.
 
 ![C# language within VS Code](images/csharp/c_sharp_hero.png)
 
-VS Code supports debugging of C# applications running on either .NET Core or Mono. 
+VS Code supports debugging of C# applications running on either .NET Core or Mono.
 
-For detailed instructions on: 
+For detailed instructions on:
 
 * .NET Core debugging - see the [Microsoft C# extension's GitHub page](https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger.md).
-* Mono debugging - see the section on [Mono Debugging](/docs/editor/debugging.md#mono-debugging).
+* Mono debugging - see the [Mono Debug extension's README](https://marketplace.visualstudio.com/items?itemName=ms-vscode.mono-debug).
 
 >**Note:** VS Code does not support debugging applications running on the Desktop .NET Framework.
 
-Due to this focus, many standard C# project types are not recognized by VS Code.  An example of a non-supported project type is an ASP.NET MVC Application (though ASP.NET Core is supported).  In these cases, if you simply want to have a lightweight tool to edit a file - VS Code has you covered.  If you want the best possible experience for those projects and development on Windows in general, we recommend you use [Visual Studio Community](https://www.visualstudio.com/products/visual-studio-community-vs).
+Due to this focus, many standard C# project types are not recognized by VS Code.  An example of a non-supported project type is an ASP.NET MVC Application (though ASP.NET Core is supported).  In these cases, if you want to have a lightweight tool to edit a file - VS Code has you covered.  If you want the best possible experience for those projects and development on Windows in general, we recommend you use [Visual Studio Community](https://www.visualstudio.com/products/visual-studio-community-vs).
 
 ## Installing C&#35; support
 
 C# language support is an optional [install from the Marketplace](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp). You can install it from within VS Code by searching for 'C#' in the **Extensions: Install Extension** dropdown (`kb(workbench.action.showCommands)` and type `ext install`) or if you already have a project with C# files, VS Code will prompt you to install the extension as soon as you open a C# file.
 
-In addition to the [Microsoft C# extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp), the community has produced other extensions. 
+[Video Tutorial on Getting Started with C# in VS Code with .NET Core](https://channel9.msdn.com/Blogs/dotnet/Get-started-with-VS-Code-using-CSharp-and-NET-Core)
+
+In addition to the [Microsoft C# extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.csharp), the community has produced other extensions.
 
 <div class="marketplace-extensions-csharp"></div>
 
@@ -60,7 +62,7 @@ There is a lot to discover with C# and the editor, such as format on type, Intel
 
 ![Right Click Menu](images/csharp/editingevolved.png)
 
-For a full description of our editing features go to the [Editing Evolved](/docs/editor/editingevolved.md) documentation.
+For a full description of our editing features, go to the [Basic Editing](/docs/editor/codebasics.md) and [Code Navigation](/docs/editor/editingevolved.md) documentation.
 
 Here are a few highlights...
 
@@ -76,7 +78,7 @@ We have several built-in snippets included in VS Code that will come up as you t
 
 ![Snippets](images/csharp/snippet.png)
 
->**Tip:** You can add in your own User Defined Snippets for C#.  Take a look at [User Defined Snippets](/docs/customization/userdefinedsnippets.md) to find out how.
+>**Tip:** You can add in your own User Defined Snippets for C#.  Take a look at [User Defined Snippets](/docs/editor/userdefinedsnippets.md) to find out how.
 
 ## Search for Symbols
 
@@ -92,7 +94,7 @@ Another cool feature is the ability to see the number of references to a method 
 
 ![CodeLens](images/csharp/codelens.png)
 
->**Tip:** You can turn off references information with the `editor.referenceInfos` [setting](/docs/customization/userandworkspace.md).
+>**Tip:** You can turn off references information displayed in CodeLens with the `editor.codeLens` [setting](/docs/getstarted/settings.md).
 
 ## Find References/Peek Definition
 
@@ -110,8 +112,9 @@ There are some basic quick fixes supported in VS Code.  You will see a lightbulb
 
 Read on to find out about:
 
-* [.NET Core Development](/docs/runtimes/dotnet.md) - get up and running with cross-platform .NET
-* [Editing Evolved](/docs/editor/editingevolved.md) - find out more about advanced editing features
+* [.NET Core Development](/docs/other/dotnet.md) - get up and running with cross-platform .NET
+* [Basic Editing](/docs/editor/codebasics.md) - Learn about the powerful VS Code editor.
+* [Code Navigation](/docs/editor/editingevolved.md) - Move quickly through your source code.
 * [Tasks](/docs/editor/tasks.md) - use tasks to build your project and more
 * [Debugging](/docs/editor/debugging.md) - find out how to use the debugger with your project
 

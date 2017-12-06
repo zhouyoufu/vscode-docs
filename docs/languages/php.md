@@ -1,13 +1,12 @@
 ---
-Order: 7
+Order: 8
 Area: languages
 TOCTitle: PHP
 ContentId: DD4E5A59-1586-4A5D-8047-3D58B2FE6937
 PageTitle: PHP Programming with Visual Studio Code
-DateApproved: 8/4/2016
+DateApproved: 5/4/2017
 MetaDescription: Learn about Visual Studio Code editor features (syntax highlighting, snippets, linting) and extensions for PHP.
 ---
-
 # PHP Programming in VS Code
 
 Visual Studio Code is a great editor for PHP development. You get features like syntax highlighting and bracket matching, IntelliSense (code completion), and snippets out of the box and you can add more functionality through community created VS Code [extensions](/docs/editor/extension-gallery.md).
@@ -20,6 +19,10 @@ There are many PHP language extensions available on the [VS Code Marketplace](ht
 
 > Tip: The extensions shown above are dynamically queried. Click on an extension tile above to read the description and reviews to decide which extension is best for you. See more in the [Marketplace](https://marketplace.visualstudio.com).
 
+> Tip: The following [setting](/docs/getstarted/settings.md) allows to disable the built-in PHP completions in favor of proposals created by installed PHP extensions.
+
+- `php.suggest.basic`: Configures if the built-in PHP language suggestions are enabled. Enabled by default.
+
 ## Snippets
 
 Visual Studio Code includes a set of common snippets for PHP.  To access these, hit `kb(editor.action.triggerSuggest)` to get a context specific list.
@@ -30,7 +33,7 @@ Visual Studio Code includes a set of common snippets for PHP.  To access these, 
 
 VS Code uses the official PHP linter (`php -l`) for PHP language diagnostics. This allows VS Code to stay current with PHP linter improvements.
 
-There are three [settings](/docs/customization/userandworkspace.md) to control the PHP linter:
+There are three [settings](/docs/getstarted/settings.md) to control the PHP linter:
 
 * `php.validate.enable`: controls whether to enable PHP linting at all. Enabled by default.
 * `php.validate.executablePath`: points to the PHP executable on disk. Set this if the PHP executable is not on the system path.

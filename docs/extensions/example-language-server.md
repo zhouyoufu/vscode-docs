@@ -4,7 +4,7 @@ Area: extensions
 TOCTitle: Example-Language Server
 ContentId: A8CBE8D6-1FEE-47BF-B81E-D79FA0DB5D03
 PageTitle: Creating Language Servers for Visual Studio Code
-DateApproved: 8/4/2016
+DateApproved: 5/4/2017
 MetaDescription: Learn how to create Language Servers for Visual Studio Code.  These can be used to easily integrate existing Linters into VS Code.
 ---
 
@@ -12,7 +12,7 @@ MetaDescription: Learn how to create Language Servers for Visual Studio Code.  T
 
 Language servers allow you to add your own validation logic to files open in VS Code. Typically you just validate programming languages. However validating other file types is useful as well. A language server could, for example, check files for inappropriate language.
 
-In general, validating programming language can be expensive. Especially when validation requires parsing multiple files and building up abstract syntax trees. To avoid that performance cost, language servers in VS Code are executed in a separate process. This architecture also makes it possible that language servers can be written in other languages besides TypeScript/JavaScript and that they can support expensive additional language features like code completion or `Find All References`.
+In general, validating a programming language can be expensive. Especially when validation requires parsing multiple files and building up abstract syntax trees. To avoid that performance cost, language servers in VS Code are executed in a separate process. This architecture also makes it possible that language servers can be written in other languages besides TypeScript/JavaScript and that they can support expensive additional language features like code completion or `Find All References`.
 
 The remaining document assumes that you are familiar with normal [extension development](/docs/extensions/overview.md) for VS Code.
 
@@ -30,6 +30,7 @@ Clone the repository and then do:
 > npm install
 > code .
 ```
+The above installs all dependencies and opens two VS Code instances: one for the server code and one for the client code.
 
 ## Explaining the 'Client'
 
@@ -67,7 +68,7 @@ The last part adds a dependency to the `vscode-languageclient` library:
 
 ```json
 "dependencies": {
-    "vscode-languageclient": "^2.2.1"
+    "vscode-languageclient": "^2.6.3"
 }
 ```
 
@@ -114,7 +115,7 @@ export function activate(context: ExtensionContext) {
 	}
 	
 	// Create the language client and start the client.
-	let disposable = new LanguageClient('Language Server Example', serverOptions, clientOptions).start();
+	let disposable = new LanguageClient('languageServerExample', 'Language Server Example', serverOptions, clientOptions).start();
 	
 	// Push the disposable to the context's subscriptions so that the 
 	// client can be deactivated on extension deactivation
@@ -132,7 +133,7 @@ The interesting section in the server's `package.json` file is:
 
 ```json
 "dependencies": {
-    "vscode-languageserver": "^2.2.0"
+    "vscode-languageserver": "^2.6.2"
 }
 ```
 
@@ -183,7 +184,7 @@ connection.listen();
 
 ## Adding a Simple Validation
 
-To add document validation to the server, we simply add a listener to the text document manager that gets called whenever the content of a text document changes. It is then up to the server to decide when the best time is to validate a document. In the example implementation, the server validates the plain text document and flags all occurrences of `typescript` with a message to spell it `TypeScript`. The corresponding code snippet looks like this:
+To add document validation to the server, we add a listener to the text document manager that gets called whenever the content of a text document changes. It is then up to the server to decide when the best time is to validate a document. In the example implementation, the server validates the plain text document and flags all occurrences of `typescript` with a message to spell it `TypeScript`. The corresponding code snippet looks like this:
 
 ```typescript
 // The content of a text document has changed. This event is emitted
@@ -221,7 +222,7 @@ To test the language server do the following:
 * Now go back to the VS Code instance with the extension (client) and press `kb(workbench.action.debug.start)` to launch an additional `Extension Development Host` instance of VS Code that executes the extension code.
 * Create a test.txt file in the root folder and paste the following content:
 
-```plaintext
+```txt
 typescript lets you write JavaScript the way you really want to.
 typescript is a typed superset of JavaScript that compiles to plain JavaScript.
 Any browser. Any host. Any OS. Open Source.
@@ -233,7 +234,7 @@ The `Extension Development Host` instance will then look like this:
 
 ## Debugging both Client and Server
 
-Debugging the client code is as easy as debugging a normal extension. Simply set a breakpoint in the VS Code instance that contains the client code and debug the extension by pressing `kb(workbench.action.debug.start)`. For a detailed description about launching and debugging an extension see [Running and Debugging Your Extension](/docs/extensions/debugging-extensions.md).
+Debugging the client code is as easy as debugging a normal extension. Set a breakpoint in the VS Code instance that contains the client code and debug the extension by pressing `kb(workbench.action.debug.start)`. For a detailed description about launching and debugging an extension see [Running and Debugging Your Extension](/docs/extensions/debugging-extensions.md).
 
 ![Debugging the client](images/example-language-server/debugging-client.png)
 
@@ -314,7 +315,7 @@ Starting the client again and changing the setting to maximum report 1 problem r
 
 ## Adding additional Language Features
 
-The first interesting feature a language server usually implements is validation of documents. In that sense, even a linter counts as a language server and in VS Code linters are usually implemented as language servers (see [eslint](https://github.com/Microsoft/vscode-eslint) and [jshint](https://github.com/Microsoft/vscode-jshint) for examples). But there is more to language servers. They can provide code complete, Find All References or Go To Definition. The example code below adds code completion to the server. It simply proposes the two words 'TypeScript' and 'JavaScript'.
+The first interesting feature a language server usually implements is validation of documents. In that sense, even a linter counts as a language server and in VS Code linters are usually implemented as language servers (see [eslint](https://github.com/Microsoft/vscode-eslint) and [jshint](https://github.com/Microsoft/vscode-jshint) for examples). But there is more to language servers. They can provide code complete, Find All References or Go To Definition. The example code below adds code completion to the server. It proposes the two words 'TypeScript' and 'JavaScript'.
 
 ```typescript
 // This handler provides the initial list of the completion items.
@@ -388,6 +389,9 @@ The following language features are currently supported in a language server alo
 * _CodeLens_: compute CodeLens statistics for a given text document.
 * _Document Formatting_: this includes formatting of whole documents, document ranges and formatting on type.
 * _Rename_: project-wide rename of a symbol.
+* _Document Links_: compute and resolve links inside a document.
+
+The [Language Extension Guidelines](/docs/extensionAPI/language-support.md) topic describes each of the language features above and provides guidance on how to implement them either through the language server protocol or by using the extensibility API directly from your extension.
 
 ## Incremental Text Document Synchronization
 
@@ -443,6 +447,8 @@ connection.onDidCloseTextDocument((params) => {
 To learn more about VS Code extensibility model, try these topic:
 
 * [vscode API Reference](/docs/extensionAPI/vscode-api.md) - Learn about deep language integration with VS Code language services.
+* [Language Extension Guideline](/docs/extensionAPI/language-support.md) - A guide to implementing VS Code's rich language features.
+* [Additional Extension Examples](/docs/extensions/samples.md) - Take a look at our list of example extension projects.
 
 ## Common Questions
 

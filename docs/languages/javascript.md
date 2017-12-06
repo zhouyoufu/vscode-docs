@@ -4,29 +4,80 @@ Area: languages
 TOCTitle: JavaScript
 ContentId: F54BB3D4-76FB-4547-A9D0-F725CEBB905C
 PageTitle: JavaScript Programming with Visual Studio Code
-DateApproved: 8/4/2016
+DateApproved: 5/4/2017
 MetaDescription: Get the best out of Visual Studio Code for JavaScript development
 ---
+# JavaScript in VS Code
 
-# JavaScript
+Visual Studio Code provides IntelliSense, debugging, and powerful editor features for JavaScript. VS Code uses the [JavaScript language service](https://github.com/Microsoft/TypeScript/wiki/Salsa) to make authoring JavaScript easy. In addition to syntactical features like format, format on type and outlining, you also get language service features such as **Peek**, **Go to Definition**, **Find all References**, and **Rename Symbol**.
 
-## Rich Editing Support
+![JavaScript find all references](images/javascript/javascript_find_all_references.png)
 
-Visual Studio Code uses the TypeScript language service to make authoring JavaScript easy. In addition to syntactical features like format, format on type and outlining, you also get language service features such as **Peek**, **Go to Definition**, **Find all References**, and **Rename Symbol**.
+## IntelliSense
 
-![JavaScript language within VS Code](images/javascript/javascript_hero.png)
+VS Code [IntelliSense](/docs/editor/intellisense.md) is intelligent code completion, parameter info, and member lists. VS Code provides IntelliSense using TypeScript type declaration (typings) files (for example, `node.d.ts`) to provide metadata about the JavaScript based frameworks you are consuming in your application. Type declaration files are written in TypeScript so they can express the data types of parameters and functions, allowing VS Code to provide a rich IntelliSense experience.
 
-## JavaScript Projects (jsconfig.json)
+Thanks to a feature called `Automatic Typing Acquisition` you as a user do not have to worry about these type declaration file. VS Code will install them automatically for you.
 
-VS Code's JavaScript support can operate in two different modes:
+![JavaScript intellisense animation](images/javascript/javascript_intellisense.gif)
 
-* **File Scope - no jsconfig.json**: In this mode, JavaScript files opened in Visual Studio Code are treated as independent units. As long as a file `a.js` doesn't reference a file `b.ts` explicitly (either using /// reference [directives](http://www.typescriptlang.org/docs/handbook/triple-slash-directives.html) or **CommonJS** [modules](http://www.commonjs.org/specs/modules/1.0)), there is no common project context between the two files.
+For the details of how JavaScript IntelliSense works, including being based on type inference, JsDoc annotations, TypeScript declarations, and mixing JavaScript and TypeScript projects, see the [JavaScript language service documentation](https://github.com/Microsoft/TypeScript/wiki/Salsa).
 
-* **Explicit Project - with jsconfig.json**: A JavaScript project is defined via a `jsconfig.json` file. The presence of such a file in a directory indicates that the directory is the root of a JavaScript project. The file itself can optionally list the files belonging to the project, the files to be excluded from the project, as well as compiler options (see below).
+When type inference does not provide the desired information, type information may be provided explicitly with JSDoc annotations. This document describes the [JSDoc annotations](https://github.com/Microsoft/TypeScript/wiki/JsDoc-support-in-JavaScript) currently supported. In addition to objects, methods, and properties, the JavaScript IntelliSense window also provides basic word completion for the symbols in your file.
 
-The JavaScript experience is much better when you have a `jsconfig.json` file in your workspace that defines the project context. For this reason, we provide a hint to create a `jsconfig.json` file when you open a JavaScript file in a fresh workspace. The `jsconfig.json` file corresponds to a TypeScript project [tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html) file with the attribute `allowJs` implicitly set to `true`. If no `files` attribute is present, then this defaults to including all files in the containing directory and subdirectories. When a `files` attribute is specified, only those files are included.
+VS Code ships with the most stable version of the JavaScript language service. The same language service powers both JavaScript and TypeScript, so if you want to use a newer version, you can define the `typescript.tsdk` [setting](/docs/getstarted/settings.md) to point to a directory containing the TypeScript `tsserver.js` file. See more details [here](/docs/languages/typescript.md#using-newer-typescript-versions).
 
-Make sure that you place the `jsconfig.json` at the root of your JavaScript project and not just at the root of your workspace. Below is a `jsconfig.json` file which defines the JavaScript `target` to be `ES6` and the `exclude` attribute excludes the `node_modules` folder.
+## Automatic Type Acquisition
+
+VS Code JavaScript IntelliSense for third-party libraries and modules is powered by `*.d.ts` type declaration (typings) files coming from the [npmjs](https://www.npmjs.com) type declaration file repository.
+
+In this image you can see IntelliSense, including the method signature, parameter info, and the method's documentation, for a popular library called [lodash](https://lodash.com/).
+
+![lodash typings](images/javascript/lodash_typings.png)
+
+Type declaration files are automatically downloaded and managed by Visual Studio Code for packages listed in your project's `package.json`.
+
+```json
+    "dependencies": {
+        "lodash": "^4.17.0"
+    }
+```
+
+If you are using Visual Studio Code 1.8+, you can alternately explicitly list packages to acquire type declaration files for in your `jsconfig.json`.
+
+```json
+    "typeAcquisition": {
+        "include": [
+            "lodash"
+        ]
+    }
+```
+
+Now when you `require` or `import` **lodash**, VS Code will use the automatically downloaded type declaration files for the library to provide rich Intellisense. Most common JavaScript libraries have type declaration files available. You can search for a library's type declaration file package using the [TypeSearch](https://microsoft.github.io/TypeSearch) site.
+
+## JavaScript Project (jsconfig.json)
+
+The presence of a [jsconfig.json](/docs/languages/jsconfig.md) file in a directory indicates that the directory is the root of a JavaScript project. `jsconfig.json` specifies the root files and the options for the language features provided by the [JavaScript language service](https://github.com/Microsoft/TypeScript/wiki/Salsa). For common setups a `jsconfig.json` file is not required, however, there are situations when you will want to add a `jsconfig.json`.
+
+- Not all files should be in your JavaScript project (for example, you want to exclude some files from showing IntelliSense). This situation is common with front-end and back-end code.
+- Your workspace contains more than one project context. In this situation, you should add a `jsconfig.json` file at the root folder for each project.
+- You are using the TypeScript compiler to down-level compile JavaScript source code.
+
+### Location of jsconfig.json
+
+To define our code as a JavaScript project, create `jsconfig.json` at the root of your JavaScript code as shown below. A JavaScript project is the source files of the project and should not include the derived or packaged files (such as a `dist` directory).
+
+![jsconfig setup](images/javascript/jsconfig_setup.png)
+
+In more complex projects, you may have more than one `jsconfig.json` file defined inside a workspace. You will want to do this so that the source code in one project does not appear in the IntelliSense of another project.
+
+Illustrated below is a project with a `client` and `server` folder, showing two separate JavaScript projects:
+
+![multiple jsconfigs](images/javascript/complex_jsconfig_setup.png)
+
+### Writing jsconfig.json
+
+Below is a simple template for `jsconfig.json` file which defines the JavaScript `target` to be `ES6` and the `exclude` attribute excludes the `node_modules` folder. You can copy and paste this code into your `jsconfig.json` file.
 
 ```json
 {
@@ -39,144 +90,217 @@ Make sure that you place the `jsconfig.json` at the root of your JavaScript proj
 }
 ```
 
-Here is an example with an explicit `files` attribute.
+The `exclude` attribute tells the language service which files are and are not part of your source code. If IntelliSense is slow, add folders to your `exclude` list (VS Code will prompt you to do this if it detects slow completions). You will want to `exclude` files generated by a build process (such as a `dist` directory). These files will cause suggestions to show up twice and will slow down IntelliSense.
+
+You can explicitly set the files in your project using the `include` attribute. If no `include` attribute is present, then this defaults to including all files in the containing directory and subdirectories. When a `include` attribute is specified, only those files are included.
+
+Here is an example with an explicit `include` attribute:
+
 ```json
 {
     "compilerOptions": {
         "target": "ES6"
     },
-    "files": [
-        "src/app.js"
+    "include": [
+        "src/**/*"
     ]
 }
 ```
 
-The `files` attribute cannot be used in conjunction with the `exclude` attribute. If both are specified, the `files` attribute takes precedence.
+The best practice, and least error prone route, is to use the `include` attribute with a single `src` folder. Note that the file paths in `exclude` and `include` are relative to the location of `jsconfig.json`.
 
-In more complex projects, you may have more than one `jsconfig.json` file defined inside a workspace, as illustrated in below for a project with a `client` and `server` folder, that are a separate project context:
+See [here](/docs/languages/jsconfig.md) for the full documentation of `jsconfig.json`.
 
-![multiple jsconfigs](images/javascript/client-server.png)
+> **Note:** `jsconfig.json` is the same as a `tsconfig.json` file, only with `allowJS` set to true. See [the documentation for `tsconfig.json`](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html) here to see other available options.
 
-### Excludes 
+## Debugging
 
-Whenever possible, you should exclude folders with JavaScript files that are not part of the source code for your project.
+VS Code comes with great debugging support for JavaScript. Set breakpoints, inspect objects, navigate the call stack, and execute code in the Debug Console. See more about debugging [here](/docs/editor/debugging.md).
 
->**Note:** If you do not have a `jsconfig.json` in your workspace, VS Code will by default exclude the `node_modules` folder and the folder defined by the `out` attribute.
+### Debug Client Side
 
-Below is a table mapping common project components to their installation folders which are recommended to exclude:
+You can debug your client side code using a browser debugger such as [Debugger for Chrome](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome) or [Debugger for Edge](https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-edge).
 
-Component | folder to exclude
-----------|-----------
-`node` | exclude the `node_modules` folder
-`webpack`, `webpack-dev-server` | exclude the content folder, e.g., `dist`.
-`bower` | exclude the `bower_components` folder
-`ember` | exclude the `tmp` and `temp` folders
-`jspm` | exclude the `jspm_packages` folder
+### Debug Server Side
 
-When your JavaScript project is growing too large, it is often because of library folders like `node_modules`. If VS Code detects that your project is growing too large, it will prompt you to edit the `exclude` list.
+Debug Node.js in VS Code using the built-in debugger. Setup is easy and you can read a tutorial for Node.js debugging [here](/docs/nodejs/nodejs-tutorial.md#debugging-your-express-application).
 
->**Tip:** Sometimes changes to configuration, such as adding or editing a `jsconfig.json` file are not picked up correctly. Running the **Reload JavaScript Project** command should reload the project and pick up the changes.
+![debug data inspection](images/javascript/debug_data_inspection.gif)
 
-### jsconfig Options
+## Type Checking and Quick Fixes for JavaScript Files
 
-Below are jsconfig options to configure the JavaScript language support.
+VS Code allows you to leverage some of TypeScript's advanced type checking and error reporting functionality in regular JavaScript files. This is a great way to catch common programming mistakes. These type checks also enable some exciting quickfixes for JavaScript, including *add missing import* and *add missing property*. 
 
-Option  | Description
-----------------|-----
-`noLib` | Do not include the default library file (lib.d.ts)
-`target`| Specifies which default library (lib.d.ts) to use. The values are "ES3", "ES5", "ES6".
-`experimentalDecorators`|Enables experimental support for proposed ES decorators.
-`allowSyntheticDefaultImports`|Allow default imports from modules with no default export. This does not affect code emit, just typechecking.
+![Using type checking and quick fixes in a JavaScript file](images/javascript/checkjs-example.gif)
 
-## IntelliSense
+TypeScript can infer types in `.js` files same as in `.ts` files. When types cannot be inferred, they can be specified using JSDoc comments. You can read more about how TypeScript uses JSDocs for JavaScript type checking [here](https://github.com/Microsoft/TypeScript/wiki/Type-Checking-JavaScript-Files).
 
-The JavaScript Support uses different strategies to provide IntelliSense (smart code completions).
+Type checking of JavaScript is optional and opt-in. Existing JavaScript validation tools such as ESLint can be used alongside the new built-in type checking functionality.
 
-### IntelliSense based on type inference
+You can get started with type checking a few different ways depending on your needs.
 
-JavaScript uses the same inference as TypeScript to determine the type of a value.
+**Per file**
 
-The following patterns are also recognized:
+The easiest way to enable type checking in a JavaScript file is by adding `// @ts-check` to the top of a file.
 
-- **"ES3-style"** classes, specified using a constructor function and assignments to the prototype property.
-- **CommonJS**-style module patterns, specified as property assignments on the exports object, or assignments to the `module.exports` property.
+```js
+// @ts-check
+let easy = 'abc'
+easy = 123 // Error: Type '123' is not assignable to type 'string'
+```
 
-The **AMD** (Asynchronous Module Definition) module pattern is currently not supported.
+Using `// @ts-check` is a good approach if you just want to try type checking in a few files but not yet enable it for an entire codebase.
 
-IntelliSense offers both inferred proposals and the global identifiers of the project. The inferred symbols are presented first, followed by the global identifiers (with the document icon), as you can see in the image below.
+**Using a Setting**
 
-![IntelliSense](images/javascript/es3-classes.png)
+To enable type checking for all JavaScript files without changing any code, just add `"javascript.implicitProjectConfig.checkJs": true` to your workspace or user settings. This enables type checking for any JavaScript file that is not part of a `jsconfig.json` or `tsconfig.json` project.
 
-### JSDoc annotations
+You can opt individual files out of type checking with a `// @ts-nocheck` comment at the top of the file:
 
-Where type inference does not provide the desired type information, (or just for documentation purposes), type information may be provided explicitly via **JSDoc** annotations.
+```js
+// @ts-nocheck
+let easy = 'abc'
+easy = 123 // no error
+```
 
-This [document](https://github.com/Microsoft/TypeScript/wiki/JsDoc-support-in-JavaScript) describes the **JSDoc** annotations currently supported.
+You can also disable individual errors in a JavaScript file using a `// @ts-ignore` comment on the line before the error:
 
-### TypeScript definition file
+```js
+let easy = 'abc'
+// @ts-ignore
+easy = 123 // no error
+```
 
- You can also get IntelliSense for libraries through the use of type definition `.d.ts` files. [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) is a repository of typings files for all major JavaScript libraries and environments. The typings are easily managed using [Typings](https://github.com/typings/typings), the TypeScript Definition manager.
+**Using a JSConfig or TSConfig**
 
-For example `typings install dt~node --global` installs all the typings for the built-in Node.js modules. If your project has a `jsconfig.json` file, then make sure that `typings` is contained in the project context defined by the location of the `jsconfig.json` file. If you have no `jsconfig.json`, then you need to manually add a `/// reference`  to the `.d.ts` from each JavaScript file.
+To enable type checking for JavaScript files that are part of a `jsconfig.json` or `tsconfig.json`, simply add `"checkJs": true` to the project's compiler options:
 
->**Tip**: When you want to use ES6 style imports but the typings do not yet use ES6 style exports, then set the [TypeScript compiler option](https://www.typescriptlang.org/docs/handbook/compiler-options.html) `allowSyntheticDefaultImports` to true.
+`jsconfig.json`:
 
 ```json
 {
-  "compilerOptions": {
-    "target": "ES6",
-    "module": "commonjs",
-    "allowSyntheticDefaultImports": true
-  },
-  "exclude": [
-    "node_modules"
-  ]
+    "compilerOptions": {
+        "checkJs": true
+    },
+    "exclude": [
+        "node_modules"
+    ]
 }
 ```
 
-## Mixed TypeScript and JavaScript projects
+`tsconfig.json`:
 
-It is now possible to have mixed TypeScript and JavaScript projects. Existing JavaScript code using the **CommonJS** module format, may be imported and consumed by TypeScript code using the **ECMAScript 2015** module syntax. Conversely, TypeScript code written to provide a well-defined API contract for a service, may be referenced by JavaScript code that is written to call that service, thus providing rich IntelliSense at design time.
+```json
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": true
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}
+```
 
-To enable JavaScript inside a TypeScript project, you can set the `allowJs` property to `true` in the TypeScript project's `tsconfig.json` file.
+This enables type checking for all JavaScript files in the project. You can use `// @ts-nocheck` to disable type checking per file.
 
-## Compiling JavaScript down-level
+JavaScript type checking requires TypeScript 2.3. If you are unsure what version of TypeScript is currently active in your workspace, simply run the **TypeScript: Select TypeScript Version** command to check.
+
+## Linters
+
+A [linter](https://en.wikipedia.org/wiki/Lint_%28software%29) is a tool that provides warnings for suspicious looking code. VS Code supports linters through [extensions](/docs/editor/extension-gallery.md). Linters provide warnings, errors, and light bulb actions.
+
+VS Code provides support for JavaScript linters, including [ESLint](http://eslint.org/), [JSHint](http://jshint.com/) and [StandardJS](https://standardjs.com/).  If enabled, the JavaScript code is validated as you type and you can navigate to reported problems and fix them inside VS Code.
+
+ ![linter warning](images/javascript/eslint_warning.png)
+
+> **Tip:** In the above example, the error comes from `eslint`. Error messages will be prefixed (see above `[eslint]`) by the originator of the message. Error messages from the JavaScript language service are prefixed `js`.
+
+> **Tip** You can disable default JavaScript validation by setting `"javascript.validate.enable": false` in your [settings](/docs/getstarted/settings.md).
+
+<div class="marketplace-extensions-javascript-linters"></div>
+
+> **Tip:** This list is dynamically queried from the [VS Code Marketplace](https://marketplace.visualstudio.com). Read the description and reviews to decide if the extension is right for you.
+
+A linter extension may require an external tool. The steps below show how to setup ESLint. The process is similar for other linters.
+
+1. Install the linter globally or inside the workspace folder that contains the JavaScript code to be validated. For example, using `npm install -g eslint`.
+2. Install the [ESLint](https://marketplace.visualstudio.com/items/dbaeumer.vscode-eslint) extension.
+3. Create a `.eslintrc.json` file in the root of your workspace to configure the linter. You can use `eslint --init` to create an initial version of the `.eslintrc.json` file.
+
+>**Tip:** You get IntelliSense and hovering inside the `.eslintrc.json` file.
+
+>**Tip:** The linter is enabled after installation. You can disable a linter with the corresponding `.enable` [setting](/docs/getstarted/settings.md). For ESLint, this would be setting `"eslint.enable" : false`.
+
+It is recommended that you enable the linter rules that warn about undefined and unused variables. To do this, put the following options in your `.eslintrc.json` file.
+
+```json
+"no-undef": 1,
+"no-unused-vars": 1,
+```
+
+You can also control when a linter runs with the linter `.run` setting. The two options are the default `onType` after each key stroke and `onSave` after you save your file.
+
+Here are a few useful resources when using ESLint.
+
+* [Complete list of ESLint Rules](http://eslint.org/docs/rules/)
+* [Configuring ESLint](http://eslint.org/docs/user-guide/configuring)
+* [Getting Started with ESLint](http://eslint.org/docs/user-guide/getting-started)
+
+## Snippets
+
+VS Code has several built-in snippets that will come up as you type or you can press `kb(editor.action.triggerSuggest)` (**Trigger Suggest**) and you will see a context specific list of suggestions.
+
+![built in javascript snippet foreach](images/javascript/javascript_snippets.gif)
+
+> **Tip:** You can add in your own snippets for JavaScript. See [User Defined Snippets](/docs/editor/userdefinedsnippets.md) to find out how.
+
+You may not want to show snippets. You can disable them by setting `editor.snippetSuggestions` to `"none"` in your [settings](/docs/getstarted/settings.md) file. If you'd like to see snippets, you can specify the order relative to suggestions; at the top (`"top"`), at the bottom (`"bottom"`), or inlined ordered alphabetically (`"inline"`). The default is `"inline"`.
+
+You can enable tab completions with `editor.tabCompletion` setting. After typing the prefix of a snippet, press `kbstyle(Tab)` to insert it.
+
+## Use Next Generation JavaScript
+
+### Run Babel inside VS Code
+
+The [Babel](https://babeljs.io) transpiler turns ES6 files into readable ES5 JavaScript with Source Maps. You can easily integrate **Babel** into your workflow by adding the configuration below to your `tasks.json` file (located under the workspace's `.vscode` folder). The `isBuildCommand` switch makes this task the **Task: Run Build Task** gesture.  `isBackground` tells VS Code to keep running this task in the background. To learn more, go to [Tasks](/docs/editor/tasks.md).
+
+```json
+{
+    "version": "0.1.0",
+    "command": "${workspaceRoot}/node_modules/.bin/babel",
+    "isShellCommand": true,
+    "tasks": [
+        {
+            "args": ["src", "--out-dir", "lib", "-w", "--source-maps"],
+            "taskName": "watch",
+            "suppressTaskName": true,
+            "isBuildCommand": true,
+            "isBackground": true
+        }
+    ]
+}
+```
+
+Once you have added this, you can start **Babel** with the `kb(workbench.action.tasks.build)` (**Run Build Task**) command and it will compile all files from the `src` directory into the `lib` directory.
+
+> **Tip:** For help with Babel CLI see the instructions [here](https://babeljs.io/docs/setup/#installation). The example above uses the CLI option.
+
+### Use the TypeScript Compiler
 
 One of the key features TypeScript provides is the ability to use the latest JavaScript language features, and emit code that can execute in JavaScript runtimes that don't yet understand those newer features. With JavaScript using the same language service, it too can now take advantage of this same feature.
 
 The TypeScript compiler `tsc` can down-level compile JavaScript files from ES6 to another language level. Configure the `jsconfig.json` with the desired options and then use the –p argument to make `tsc` use your `jsconfig.json` file, e.g. `tsc -p jsconfig.json` to down-level compile.
 
-The following compiler options in `jsconfig.json` apply when `tsc` is used for down level compiling of ES6 JavaScript to an older version:
+Read more about the compiler options for down level compilation [here](/docs/languages/jsconfig.md#down-level-compilation-with-typescript-compiler).
 
-Option | Description
-----------|----------
-`module`|Specify module code generation. The values are "commonjs", "system", "umd", "amd", "es6", "es2015"
-`diagnostics`|Show diagnostic information.
-`emitBOM`|Emit a UTF-8 Byte Order Mark (BOM) in the beginning of output files.
-`inlineSourceMap`|Emit a single file with source maps instead of having a separate file.
-`inlineSources`|Emit the source alongside the sourcemaps within a single file; requires --inlineSourceMap to be set.
-`jsx`|Specify JSX code generation: "preserve" or "react".
-`reactNamespace`|Specifies the object invoked for createElement and __spread when targeting 'react' JSX emit.
-`mapRoot`|Specifies the location as an uri in a string where debugger should locate map files instead of generated locations.
-`noEmit`|Do not emit output.
-`noEmitHelpers`|Do not generate custom helper functions like __extends in compiled output.
-`noEmitOnError`|Do not emit outputs if any type checking errors were reported.
-`noResolve`|Do not resolve triple-slash references or module import targets to the input files.
-`outFile`|Concatenate and emit output to single file.
-`outDir`|Redirect output structure to the directory.
-`removeComments`|Do not emit comments to output.
-`rootDir`|Specifies the root directory of input files. Use to control the output directory structure with --outDir.
-`sourceMap`| Generates corresponding '.map' file.
-`sourceRoot`| Specifies the location where debugger should locate JavaScript files instead of source locations.
-`stripInternal`|`do not emit declarations for code that has an '@internal' annotation.
-`watch`|Watch input files.
-`emitDecoratorMetadata`|Emit design-type metadata for decorated declarations in source.
-`noImplicitUseStrict`|Do not emit "use strict" directives in module output.
+## Formatting
 
+As with other languages, you can format your JavaScript code in VS Code.
 
-## JavaScript Formatting
+![formatter](images/javascript/formatter.gif)
 
-VS Code provides several formatting settings for JavaScript. They can all be found in the `javascript.format` [settings](/docs/customization/userandworkspace.md) name space.
+VS Code provides several formatting settings for JavaScript. They can all be found in the `javascript.format` [settings](/docs/getstarted/settings.md) namespace.
 
 ```typescript
 // Defines space handling after a comma delimiter
@@ -207,102 +331,69 @@ VS Code provides several formatting settings for JavaScript. They can all be fou
 "javascript.format.placeOpenBraceOnNewLineForControlBlocks": boolean,
 ```
 
-## Snippets for JavaScript
+## Popular Extensions
 
-VS Code has several built-in snippets that will come up as you type or you can press `kb(editor.action.triggerSuggest)` (**Trigger Suggest**) and you will see a context specific list of suggestions.
-
-![Try Suggestions](images/javascript/trysnippet.png)
-
-Selecting the snippet with `kbstyle(Tab)` results in:
-
-![Try Result](images/javascript/tryresult.png)
-
->**Tip:** You can add in your own User Defined Snippets for JavaScript.  See [User Defined Snippets](/docs/customization/userdefinedsnippets.md) to find out how.
-
-## Run Babel inside VS Code
-
-The [Babel](https://babeljs.io) transpiler turns ES6 files into readable ES5 JavaScript with Source Maps. You can easily integrate **Babel** into your workflow by adding this code to your `tasks.json` file (located under the workspace's `.vscode` folder). The `isBuildCommand` switch makes this task the `Task: Run Build Task` gesture.  `isWatching` tells VS Code not to wait for this task to finish. To learn more, go to [Tasks](/docs/editor/tasks.md).
-
-```json
-{
-    "version": "0.1.0",
-    "command": "${workspaceRoot}/node_modules/.bin/babel",
-    "isShellCommand": true,
-    "tasks": [
-        {
-            "args": ["src", "--out-dir", "lib", "-w", "--source-maps"],
-            "taskName": "watch",
-            "suppressTaskName": true,
-            "isBuildCommand": true,
-            "isWatching": true
-        }
-    ]
-}
-```
-
-Once you have added this, you can start **Babel** with the `kb(workbench.action.tasks.build)` (**Run Build Task**) command and it will compile all files from the `src` directory into the `lib` directory.
-
-## JSX and React Native
-
-VS Code supports **JSX** and **React Native**. To get IntelliSense for **React/JSX**, install the typings for `react` by running `typings install dt~react --global` from the terminal. To get IntelliSense for **React Native**, run `typings install dt~react-native --global`
-
-**React Native** examples often use the experimental **Object Rest/Spread** operator. This is not yet supported by VS Code. If you want to use it, it is recommended that you disable the built-in syntax checking (see below).
-
-To enable ES6 import statements for **React Native**, you need to set the `allowSyntheticDefaultImports` compiler option to `true`. This tells the compiler to create synthetic default members and you get IntelliSense. **React Native** uses **Babel** behind the scenes to create the proper run-time code with default members. If you also want to do debugging of **React Native** code then you can install the [React Native Extension](https://marketplace.visualstudio.com/items?itemName=vsmobile.vscode-react-native).
-
-## Disable Syntax Validation when using non ES6 constructs
-
-Some users want to use syntax constructs like the proposed Object Rest/Spread Properties. However, these are currently not supported by VS Code's JavaScript support and are flagged as errors. For users who still want to use these future features, we provide the `javascript.validate.enable` [setting](/docs/customization/userandworkspace.md). With `javascript.validate.enable: false` you disable all built-in syntax checking. If you do this, we recommend that you use a linter like [ESLint](http://eslint.org) to validate your code. Since the JavaScript support doesn't understand ES7 constructs, features like IntelliSense might not be fully accurate.
-
-## JavaScript Linters (ESLint, JSHint)
-
-VS Code provides support for [ESLint](http://eslint.org/) and [JSHint](http://jshint.com/) via [extensions](/docs/editor/extension-gallery.md). If enabled, the JavaScript code is validated as you type and reported problems can be navigated to and fixed inside VS Code.
-
-To enable one of the linters, do the following:
-
-* Install the corresponding linter globally or inside the workspace folder that contains the JavaScript code to be validated. For example, using `npm install -g eslint` or `npm install -g jshint`, respectively.
-* Install the [ESLint](https://marketplace.visualstudio.com/items/dbaeumer.vscode-eslint) or [JSHint](https://marketplace.visualstudio.com/items/dbaeumer.jshint) extension. The linter is enabled after installation. You can disable a linter via the corresponding settings `"eslint.enable": true` or `"jshint.enable": true`, respectively.
-* Use a `.eslintrc.json` or `.jshintrc` file in the root of your workspace to configure the linter. You can use `eslint --init` to create an initial version of the `.eslintrc.json` file.
-
->**Tip**: You get IntelliSense and hovering inside the `.eslintrc.json` and the `.jshintrc` files.
-
-It is recommended that you enable the linter rules that warn about undefined and unused variables.
-
-In JSHint:
-
-```json
-"undef": true,
-"unused": true,
-```
-
-In ESLint:
-
-```json
-"no-undef": 1,
-"no-unused-vars": 1,
-```
-
-## JavaScript Extensions
-
-VS Code provides excellent support for JavaScript out of the box. Additionally, you can install debuggers, snippets, linters, and other extensions. 
+VS Code ships with excellent support for JavaScript but you can additionally install debuggers, snippets, linters, and other JavaScript tools through [extensions](/docs/editor/extension-gallery.md).
 
 <div class="marketplace-extensions-javascript"></div>
 
-> Tip: The extensions shown above are dynamically queried. Click on an extension tile above to read the description and reviews to decide which extension is best for you. See more in the [Marketplace](https://marketplace.visualstudio.com).
+> **Tip:** The extensions shown above are dynamically queried. Click on an extension tile above to read the description and reviews to decide which extension is best for you. See more in the [Marketplace](https://marketplace.visualstudio.com).
 
 ## Next Steps
 
 Read on to find out about:
 
-* [TypeScript](typescript) - VS Code has great support for TypeScript which brings structure and strong typing to your JavaScript code, without compromising the good parts.
+* [jsconfig.json](/docs/languages/jsconfig.md) - Detailed description of the `jsconfig.json` project file.
+* [IntelliSense](/docs/editor/intellisense.md) - Learn more about IntelliSense and how to use it effectively for your language.
+* [Debugging](/docs/editor/debugging.md) - Learn how to set up debugging for your application.
+* [Node.js](/docs/nodejs/nodejs-tutorial.md) - A walkthrough to create an Express Node.js application.
+* [TypeScript](/docs/languages/typescript.md) - VS Code has great support for TypeScript which brings structure and strong typing to your JavaScript code.
 
-Watch the introductory video:
+Watch these introductory videos:
 
-* [IntelliSense](/docs/introvideos/intellisense) - Tutorial on IntelliSense with JavaScript
-* [Debugging](/docs/introvideos/debugging)
+* [Quick Tour using JavaScript](/docs/introvideos/quicktour.md) - See a three-minute overview of using JavaScript in VS Code.
+* [IntelliSense](/docs/introvideos/intellisense.md) - Tutorial on IntelliSense with JavaScript.
+* [Debugging](/docs/introvideos/debugging.md) - Learn how to debug a Node.js application.
 
 ## Common Questions
 
+**Q: Does VS Code support JSX and React Native?**
+
+**A:** VS Code supports **JSX** and **React Native**. You will get IntelliSense for **React/JSX** and **React Native** from automatically downloaded type declaration (typings) files from the [npmjs](https://www.npmjs.com) type declaration file repository. Additionally, you can install the popular [React Native extension](https://marketplace.visualstudio.com/items?itemName=vsmobile.vscode-react-native) from  the Marketplace.
+
+**React Native** examples often use the experimental **Object Rest/Spread** operator. This is not yet supported by VS Code. If you want to use it, it is recommended that you disable the built-in syntax checking (see below).
+
+To enable ES6 import statements for **React Native**, you need to set the `allowSyntheticDefaultImports` compiler option to `true`. This tells the compiler to create synthetic default members and you get IntelliSense. **React Native** uses **Babel** behind the scenes to create the proper run-time code with default members. If you also want to do debugging of **React Native** code then you can install the [React Native Extension](https://marketplace.visualstudio.com/items?itemName=vsmobile.vscode-react-native).
+
+**Q: IntelliSense is not working for external libraries.**
+
+**A:** `Automatic Type Acquisition` works for dependencies downloaded by npm (specified in `package.json`), Bower (specified in `bower.json`), and for many of the most common libraries listed in your folder structure (i.e. `jquery-3.1.1.min.js`).
+
+**ES6 Style imports are not working.**
+
+When you want to use ES6 style imports but some type declaration (typings) files do not yet use ES6 style exports, then set the [TypeScript compiler option](https://www.typescriptlang.org/docs/handbook/compiler-options.html) `allowSyntheticDefaultImports` to true.
+
+```javascript
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    // This is the line you want to add
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
+```
+
 **Q: Can I debug minified/uglified JavaScript?**
 
-**A:** Yes, you can.
+**A:** Yes, you can. You can see this working using JavaScript source maps in the [Node.js Debugging](/docs/nodejs/nodejs-debugging.md) topic.
+
+**Q: How do I disable Syntax Validation when using non ES6 constructs?**
+
+**A:** Some users want to use syntax constructs like the proposed Object Rest/Spread Properties. However, these are currently not supported by VS Code's JavaScript language service and are flagged as errors. For users who still want to use these future features, we provide the `javascript.validate.enable` [setting](/docs/getstarted/settings.md).
+
+With `javascript.validate.enable: false`, you disable all built-in syntax checking. If you do this, we recommend that you use a linter like [ESLint](http://eslint.org) to validate your source code. Since VS Code's JavaScript support doesn't understand ES7 constructs, features like IntelliSense might not be fully accurate.
+

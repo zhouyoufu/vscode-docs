@@ -99,8 +99,8 @@ gulp.task('compile-blog', ['compile-blog-markdown', 'copy-blog-images'], functio
 	});
 
     var latest = new File({
-       path: 'latest.handlebars',
-       contents: blogs[0].File.contents
+       path: 'latest.html',
+	   contents: common.getLatestContent('blogs', blogs[0].Link, 'Visual Studio Code Blogs', 'The latest Visual Studio Code blogs')
     });
     
     es.readArray([latest])
